@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Matrices</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="floating-particles">
+        <div class="particle" style="top: 10%; left: 10%; width: 4px; height: 4px; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 20%; left: 80%; width: 6px; height: 6px; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 50%; left: 5%; width: 3px; height: 3px; animation-delay: 2s;"></div>
+        <div class="particle" style="top: 80%; left: 70%; width: 5px; height: 5px; animation-delay: 3s;"></div>
+        <div class="particle" style="top: 30%; left: 60%; width: 4px; height: 4px; animation-delay: 4s;"></div>
+    </div>
+
+    <div class="calculator-container">
+        <header class="header">
+            <h1>Calculadora de Matrices</h1>
+            <p>Realiza operaciones matemáticas con matrices de forma interactiva</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Matriz A -->
+            <section class="matrix-section" id="matrix-a-section">
+                <div class="matrix-header">
+                    <h2 class="matrix-title">
+                        <i class="fas fa-th"></i>
+                        Matriz A
+                    </h2>
+                    <div class="size-controls">
+                        <div class="size-group">
+                            <label class="size-label" for="size-a">Tamaño (n×n):</label>
+                            <input type="number" id="size-a" name="size-a" class="size-input" value="3" min="2" max="10">
+                        </div>
+                    </div>
+                </div>
+                <div id="matrix-a-grid" class="matrix-grid">
+                    <!-- Las celdas se generarán dinámicamente -->
+                </div>
+            </section>
+
+            <!-- Panel de Operaciones -->
+            <aside class="operations-panel">
+                <h2 class="operations-title">Operaciones</h2>
+                
+                <div class="operation-group">
+                    <div class="operation-group-title">Suma y Resta</div>
+                    <button class="operation-btn" id="add-btn" data-operation="add">
+                        <i class="fas fa-plus"></i>
+                        A + B
+                    </button>
+                    <button class="operation-btn" id="subtract-ab-btn" data-operation="subtract-ab">
+                        <i class="fas fa-minus"></i>
+                        A - B
+                    </button>
+                    <button class="operation-btn" id="subtract-ba-btn" data-operation="subtract-ba">
+                        <i class="fas fa-exchange-alt"></i>
+                        B - A
+                    </button>
+                </div>
+
+                <div class="operation-group">
+                    <div class="operation-group-title">Multiplicación</div>
+                    <button class="operation-btn" id="multiply-btn" data-operation="multiply">
+                        <i class="fas fa-times"></i>
+                        A × B
+                    </button>
+                    <div class="scalar-group">
+                        <input type="number" id="scalar-input" class="scalar-input" placeholder="k" step="0.01">
+                        <button class="operation-btn scalar-btn" id="scalar-a-btn" data-operation="scalar-a">
+                            <i class="fas fa-asterisk"></i>
+                            k × A
+                        </button>
+                    </div>
+                    <div class="scalar-group">
+                        <button class="operation-btn scalar-btn" id="scalar-b-btn" data-operation="scalar-b">
+                            <i class="fas fa-asterisk"></i>
+                            k × B
+                        </button>
+                    </div>
+                </div>
+
+                <div class="operation-group">
+                    <div class="operation-group-title">Transposición</div>
+                    <button class="operation-btn secondary" id="transpose-a-btn" data-operation="transpose-a">
+                        <i class="fas fa-exchange-alt"></i>
+                        A<sup>T</sup>
+                    </button>
+                    <button class="operation-btn secondary" id="transpose-b-btn" data-operation="transpose-b">
+                        <i class="fas fa-exchange-alt"></i>
+                        B<sup>T</sup>
+                    </button>
+                </div>
+
+                <div class="operation-group">
+                    <div class="operation-group-title">Determinante</div>
+                    <button class="operation-btn secondary" id="determinant-a-btn" data-operation="determinant-a">
+                        <i class="fas fa-calculator"></i>
+                        det(A)
+                    </button>
+                    <button class="operation-btn secondary" id="determinant-b-btn" data-operation="determinant-b">
+                        <i class="fas fa-calculator"></i>
+                        det(B)
+                    </button>
+                </div>
+
+                <div class="operation-group">
+                    <div class="operation-group-title">Matriz Inversa</div>
+                    <button class="operation-btn secondary" id="inverse-a-btn" data-operation="inverse-a">
+                        <i class="fas fa-undo"></i>
+                        A⁻¹
+                    </button>
+                    <button class="operation-btn secondary" id="inverse-b-btn" data-operation="inverse-b">
+                        <i class="fas fa-undo"></i>
+                        B⁻¹
+                    </button>
+                    <button class="operation-btn secondary" id="verify-inverse-a-btn" data-operation="verify-inverse-a">
+                        <i class="fas fa-check-circle"></i>
+                        Verificar A×A⁻¹
+                    </button>
+                </div>
+
+                <div class="operation-group">
+                    <div class="operation-group-title">Matriz Identidad</div>
+                    <div class="identity-group">
+                        <input type="number" id="identity-size" class="scalar-input" placeholder="n" min="2" max="10" value="3">
+                        <button class="operation-btn secondary" id="identity-btn" data-operation="identity">
+                            <i class="fas fa-th-large"></i>
+                            I<sub>n</sub>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="operation-group">
+                    <div class="operation-group-title">Utilidades</div>
+                    <button class="operation-btn tertiary" id="random-fill-btn" data-operation="random-fill">
+                        <i class="fas fa-random"></i>
+                        Llenar Random
+                    </button>
+                    <button class="operation-btn tertiary" id="clear-matrices-btn" data-operation="clear-matrices">
+                        <i class="fas fa-eraser"></i>
+                        Limpiar Todo
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Matriz B -->
+            <section class="matrix-section" id="matrix-b-section">
+                <div class="matrix-header">
+                    <h2 class="matrix-title">
+                        <i class="fas fa-th"></i>
+                        Matriz B
+                    </h2>
+                    <div class="size-controls">
+                        <div class="size-group">
+                            <label class="size-label" for="size-b">Tamaño (n×n):</label>
+                            <input type="number" id="size-b" name="size-b" class="size-input" value="3" min="2" max="10">
+                        </div>
+                    </div>
+                </div>
+                <div id="matrix-b-grid" class="matrix-grid">
+                    <!-- Las celdas se generarán dinámicamente -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Sección de Resultados -->
+        <section class="result-section" id="result-section">
+            <div class="result-header">
+                <h2 class="result-title">
+                    <i class="fas fa-chart-line"></i>
+                    Resultado
+                </h2>
+                <button class="clear-btn" id="clear-result-btn">
+                    <i class="fas fa-trash"></i>
+                    Limpiar
+                </button>
+            </div>
+            <div id="result-display" class="result-display">
+                <div class="result-placeholder">
+                    Selecciona una operación para ver el resultado aquí
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
