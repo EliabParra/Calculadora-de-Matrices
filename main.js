@@ -167,7 +167,12 @@ function setupOperationButtons() {
             
             switch(operation) {
                 case 'add':
-                    // Implementar suma de matrices A + B
+                    const resultMatrix = matrixA.map((row, i) => row.map((val, j) => val + matrixB[i][j]))
+                    if (!validateSameDimensions(sizeA, sizeB)) {
+                        showError('Las matrices A y B deben tener el mismo tamaño para la suma')
+                        return
+                    }
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrix)}</pre>`
                     break
                 case 'subtract-ab':
                     // Implementar resta A - B
@@ -209,10 +214,23 @@ function setupOperationButtons() {
                     // Implementar generación de matriz identidad
                     break
                 case 'random-fill':
-                    // Implementar llenado aleatorio
+                    for (let i = 0; i < sizeA; i++) {
+                        for (let j = 0; j < sizeA; j++) {
+                            const randomValueA = Math.round(Math.random() * 20 - 10)
+                            $(`#matrix-a-${i}-${j}`).value = randomValueA
+                        }
+                    }
+                    for (let i = 0; i < sizeB; i++) {
+                        for (let j = 0; j < sizeB; j++) {
+                            const randomValueB = Math.round(Math.random() * 20 - 10)
+                            $(`#matrix-b-${i}-${j}`).value = randomValueB
+                        }
+                    }
+                    showSuccess('Matrices A y B llenadas con valores aleatorios entre -10 y 10')
                     break
                 case 'clear-matrices':
-                    // Implementar limpieza de matrices
+                    initializeMatrices()
+                    showSuccess('Matrices A y B reinicializadas a 3x3 con valores por defecto')
                     break
             }
         })
