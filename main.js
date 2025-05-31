@@ -1,13 +1,16 @@
-const matrixAGrid = document.getElementById('matrix-a-grid')
-const matrixBGrid = document.getElementById('matrix-b-grid')
-const resultDisplay = document.getElementById('result-display')
+const $ = $ => {return document.querySelector($)}
+const $$ = $$ => {return document.querySelectorAll($$)}
 
-const sizeAInput = document.getElementById('size-a')
-const sizeBInput = document.getElementById('size-b')
+const matrixAGrid = $('#matrix-a-grid')
+const matrixBGrid = $('#matrix-b-grid')
+const resultDisplay = $('#result-display')
+
+const sizeAInput = $('#size-a')
+const sizeBInput = $('#size-b')
 
 // Botones de operación
-const operationButtons = document.querySelectorAll('.operation-btn')
-const clearResultBtn = document.getElementById('clear-result-btn')
+const operationButtons = $$('.operation-btn')
+const clearResultBtn = $('#clear-result-btn')
 
 // Función para crear la estructura de las matrices (siempre cuadradas)
 function createMatrixGrid(gridElement, size, prefix) {
@@ -90,17 +93,6 @@ function showSuccess(message) {
     `
 }
 
-// Función helper para mostrar información adicional
-function showInfo(message) {
-    const currentContent = resultDisplay.innerHTML
-    resultDisplay.innerHTML = currentContent + `
-        <div class="operation-info">
-            <i class="fas fa-info-circle"></i>
-            ${message}
-        </div>
-    `
-}
-
 // Función helper para mostrar matriz en formato bonito
 function formatMatrix(matrix) {
     if (!Array.isArray(matrix) || matrix.length === 0) return ''
@@ -169,6 +161,9 @@ function setupOperationButtons() {
             // Obtener tamaños de matrices
             const sizeA = parseInt(sizeAInput.value)
             const sizeB = parseInt(sizeBInput.value)
+
+            const matrixA = getMatrixValues('matrix-a', sizeA)
+            const matrixB = getMatrixValues('matrix-b', sizeB)
             
             switch(operation) {
                 case 'add':
