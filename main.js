@@ -66,7 +66,7 @@ function getMatrixValues(prefix, size) {
     for (let i = 0; i < size; i++) {
         matrix[i] = []
         for (let j = 0; j < size; j++) {
-            const element = document.getElementById(`${prefix}-${i}-${j}`)
+            const element = $(`#${prefix}-${i}-${j}`)
             matrix[i][j] = parseFloat(element.value) || 0
         }
     }
@@ -129,7 +129,7 @@ function validateSameDimensions(sizeA, sizeB) {
 
 // Función helper para obtener valor escalar
 function getScalarValue() {
-    const scalarInput = document.getElementById('scalar-input')
+    const scalarInput = $('#scalar-input')
     const value = parseFloat(scalarInput.value)
     if (isNaN(value)) {
         showError('Por favor ingresa un valor numérico válido para el escalar')
@@ -140,7 +140,7 @@ function getScalarValue() {
 
 // Función helper para obtener tamaño de matriz identidad
 function getIdentitySize() {
-    const identityInput = document.getElementById('identity-size')
+    const identityInput = $('#identity-size')
     const size = parseInt(identityInput.value)
     if (isNaN(size) || size < 2 || size > 10) {
         showError('El tamaño de la matriz identidad debe estar entre 2 y 10')
@@ -167,21 +167,62 @@ function setupOperationButtons() {
             
             switch(operation) {
                 case 'add':
-                    const resultMatrix = matrixA.map((row, i) => row.map((val, j) => val + matrixB[i][j]))
                     if (!validateSameDimensions(sizeA, sizeB)) {
                         showError('Las matrices A y B deben tener el mismo tamaño para la suma')
                         return
                     }
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrix)}</pre>`
+                    const resultMatrixAdd = matrixA.map((row, i) => row.map((val, j) => val + matrixB[i][j]))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixAdd)}</pre>`
                     break
                 case 'subtract-ab':
-                    // Implementar resta A - B
+                    if (!validateSameDimensions(sizeA, sizeB)) {
+                        showError('Las matrices A y B deben tener el mismo tamaño para la resta')
+                        return
+                    }
+                    const resultMatrixSubstractAB = matrixA.map((row, i) => row.map((val, j) => val - matrixB[i][j]))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractAB)}</pre>`
                     break
                 case 'subtract-ba':
-                    // Implementar resta B - A
+                    if (!validateSameDimensions(sizeA, sizeB)) {
+                        showError('Las matrices A y B deben tener el mismo tamaño para la resta')
+                        return
+                    }
+                    const resultMatrixSubstractBA = matrixB.map((row, i) => row.map((val, j) => val - matrixA[i][j]))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractBA)}</pre>`
                     break
-                case 'multiply':
-                    // Implementar multiplicación A × B
+                case 'multiply-ab':
+                    if (!validateSameDimensions(sizeA, sizeB)) {
+                        showError('Las matrices A y B al ser cuadradas deben tener el mismo tamaño para la multiplicación')
+                        return
+                    }
+                    // matrixA[0][0] * matrixB[0][0] + matrixA[0][1] * matrixB[1][0] + matrixA[0][2] * matrixB[2][0]
+                    // matrixA[0][0] * matrixB[0][1] + matrixA[0][1] * matrixB[1][1] + matrixA[0][2] * matrixB[2][1]
+                    // matrixA[0][0] * matrixB[0][2] + matrixA[0][1] * matrixB[1][2] + matrixA[0][2] * matrixB[2][2]
+
+                    
+
+                    // matrixA[i][j] * matrixB[j][i] + matrixA[i][j+1] * matrixB[j+1][i] + matrixA[i][j+2] * matrixB[j+2][i]
+                    // (3) [-2, -7, 1] ,  0
+                    // (3) [-8, 9, -9] ,  1
+                    // (3) [7, 0, -7] ,  2
+                    // 1 ,  0
+                    // -5 ,  1
+                    // -5 ,  2
+                    // -1 ,  0
+                    // -9 ,  1
+                    // -1 ,  2
+                    // 1 ,  0
+                    // 3 ,  1
+                    // 0 ,  2
+                    const resultMatrixMultiplyAB = matrixA.map((row, i) => {
+                        row.map((val, j) => {
+                            matrixA[j][i] * matrixB[i][j] + matrixA[j][i+1] * matrixB[i+1][j] + matrixA[j][i+2] * matrixB[i+2][j]
+                        })
+                    })
+                    console.log(resultMatrixMultiplyAB);
+                    break
+                case 'multiply-ba':
+                    
                     break
                 case 'scalar-a':
                     // Implementar multiplicación por escalar k × A
