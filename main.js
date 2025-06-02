@@ -8,6 +8,8 @@ const resultDisplay = $('#result-display')
 const sizeAInput = $('#size-a')
 const sizeBInput = $('#size-b')
 
+const scalarInput = $('#scalar-input')
+
 // Botones de operación
 const operationButtons = $$('.operation-btn')
 const clearResultBtn = $('#clear-result-btn')
@@ -195,46 +197,52 @@ function setupOperationButtons() {
                         showError('Las matrices A y B al ser cuadradas deben tener el mismo tamaño para la multiplicación')
                         return
                     }
-                    // matrixA[0][0] * matrixB[0][0] + matrixA[0][1] * matrixB[1][0] + matrixA[0][2] * matrixB[2][0]
-                    // matrixA[0][0] * matrixB[0][1] + matrixA[0][1] * matrixB[1][1] + matrixA[0][2] * matrixB[2][1]
-                    // matrixA[0][0] * matrixB[0][2] + matrixA[0][1] * matrixB[1][2] + matrixA[0][2] * matrixB[2][2]
-
-                    
-
-                    // matrixA[i][j] * matrixB[j][i] + matrixA[i][j+1] * matrixB[j+1][i] + matrixA[i][j+2] * matrixB[j+2][i]
-                    // (3) [-2, -7, 1] ,  0
-                    // (3) [-8, 9, -9] ,  1
-                    // (3) [7, 0, -7] ,  2
-                    // 1 ,  0
-                    // -5 ,  1
-                    // -5 ,  2
-                    // -1 ,  0
-                    // -9 ,  1
-                    // -1 ,  2
-                    // 1 ,  0
-                    // 3 ,  1
-                    // 0 ,  2
-                    const resultMatrixMultiplyAB = matrixA.map((row, i) => {
-                        row.map((val, j) => {
-                            matrixA[j][i] * matrixB[i][j] + matrixA[j][i+1] * matrixB[i+1][j] + matrixA[j][i+2] * matrixB[i+2][j]
-                        })
-                    })
-                    console.log(resultMatrixMultiplyAB);
+                    const resultMatrixMultiplyAB = Array.from({ length: sizeA }, () => Array(sizeB).fill(0))
+                    for (let i = 0; i < sizeA; i++) {
+                        for (let j = 0; j < sizeB; j++) {
+                            for (let k = 0; k < sizeA; k++) {
+                                resultMatrixMultiplyAB[i][j] += matrixA[i][k] * matrixB[k][j]
+                            }
+                        }
+                    }
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyAB)}</pre>`
                     break
                 case 'multiply-ba':
-                    
+                    const resultMatrixMultiplyBA = Array.from({ length: sizeB }, () => Array(sizeA).fill(0))
+                    for (let i = 0; i < sizeB; i++) {
+                        for (let j = 0; j < sizeA; j++) {
+                            for (let k = 0; k < sizeB; k++) {
+                                resultMatrixMultiplyBA[i][j] += matrixB[i][k] * matrixA[k][j]
+                            }
+                        }
+                    }
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyBA)}</pre>`
                     break
                 case 'scalar-a':
-                    // Implementar multiplicación por escalar k × A
+                    const scalarA = parseFloat(scalarInput.value)
+                    if (isNaN(scalarA)) {
+                        showError('El valor del escalar no es válido')
+                        return
+                    }
+                    const resultMatrixScalarA = matrixA.map(row => row.map(val => val * scalarA))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarA)}</pre>`
                     break
                 case 'scalar-b':
-                    // Implementar multiplicación por escalar k × B
+                    const scalarB = parseFloat(scalarInput.value)
+                    if (isNaN(scalarB)) {
+                        showError('El valor del escalar no es válido')
+                        return
+                    }
+                    const resultMatrixScalarB = matrixB.map(row => row.map(val => val * scalarB))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarB)}</pre>`
                     break
                 case 'transpose-a':
-                    // Implementar transposición de matriz A
+                    const matrixATranspose = matrixA.map((row, i) => row.map((val, j) => val = matrixA[j][i]))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(matrixATranspose)}</pre>`
                     break
                 case 'transpose-b':
-                    // Implementar transposición de matriz B
+                    const matrixBTranspose = matrixB.map((row, i) => row.map((val, j) => val = matrixB[j][i]))
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(matrixBTranspose)}</pre>`
                     break
                 case 'determinant-a':
                     // Implementar determinante de matriz A
