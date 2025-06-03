@@ -151,16 +151,41 @@ function getIdentitySize() {
     return size
 }
 
+// Funcion para calcular el determinante de una matriz cuadrada usando eliminación de Gauss
+function determinant(matrix) {
+    const n = matrix.length
+
+    // Caso base: matriz 1x1
+    if (n === 1) return matrix[0][0]
+
+    // Caso base: matriz 2x2
+    if (n === 2) return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+
+    // Caso general: matriz nxn, usa cofactores
+    let det = 0
+    for (let col = 0; col < n; col++) {
+        // Construir submatriz (elimina fila 0 y columna 'col')
+        const subMatrix = []
+        for (let i = 1; i < n; i++) {
+            const row = []
+            for (let j = 0; j < n; j++) {
+                if (j !== col) row.push(matrix[i][j])
+            }
+            subMatrix.push(row)
+        }
+        // Suma o resta según el signo alternante
+        det += ((col % 2 === 0 ? 1 : -1) * matrix[0][col] * determinant(subMatrix))
+    }
+    return det
+}
+
 // Event listeners para botones de operación
 function setupOperationButtons() {
     operationButtons.forEach(button => {
         button.addEventListener('click', () => {
             const operation = button.dataset.operation
-            // Aquí implementarás las operaciones
             console.log(`Operación seleccionada: ${operation}`)
             
-            // Ejemplo de estructura para las operaciones:
-            // Obtener tamaños de matrices
             const sizeA = parseInt(sizeAInput.value)
             const sizeB = parseInt(sizeBInput.value)
 
@@ -245,16 +270,20 @@ function setupOperationButtons() {
                     resultDisplay.innerHTML = `<pre>${formatMatrix(matrixBTranspose)}</pre>`
                     break
                 case 'determinant-a':
-                    // Implementar determinante de matriz A
+                    // Hallar el determinante de matriz A
+                    const detA = determinant(matrixA)
+                    displayScalar(detA, 'det(A)')
                     break
                 case 'determinant-b':
-                    // Implementar determinante de matriz B
+                    // Hallar el determinante de matriz B
+                    const detB = determinant(matrixB)
+                    displayScalar(detB, 'det(B)')
                     break
                 case 'inverse-a':
-                    // Implementar inversa de matriz A
+                    // Hallar la inversa de matriz A
                     break
                 case 'inverse-b':
-                    // Implementar inversa de matriz B
+                    // Hallar la inversa de matriz B
                     break
                 case 'verify-inverse-a':
                     // Implementar verificación A × A⁻¹ = I
