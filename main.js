@@ -7,10 +7,9 @@ const resultDisplay = $('#result-display')
 
 const sizeAInput = $('#size-a')
 const sizeBInput = $('#size-b')
-
 const scalarInput = $('#scalar-input')
+const identitySizeInput = $('#identity-size')
 
-// Botones de operación
 const operationButtons = $$('.operation-btn')
 const clearResultBtn = $('#clear-result-btn')
 
@@ -37,6 +36,8 @@ function createMatrixGrid(gridElement, size, prefix) {
 function initializeMatrices() {
     createMatrixGrid(matrixAGrid, 3, 'matrix-a')
     createMatrixGrid(matrixBGrid, 3, 'matrix-b')
+    sizeAInput.value = 3
+    sizeBInput.value = 3
 }
 
 // Event listeners para cambios de tamaño
@@ -95,7 +96,7 @@ function showSuccess(message) {
     `
 }
 
-// Función helper para mostrar matriz en formato bonito
+// Función para mostrar matriz en formato bonito
 function formatMatrix(matrix) {
     if (!Array.isArray(matrix) || matrix.length === 0) return ''
     
@@ -115,7 +116,7 @@ function formatMatrix(matrix) {
     return result
 }
 
-// Función helper para mostrar escalar
+// Función para mostrar escalar
 function displayScalar(value, operation) {
     resultDisplay.innerHTML = `
         <div class="result-scalar">
@@ -124,12 +125,12 @@ function displayScalar(value, operation) {
     `
 }
 
-// Función helper para validar dimensiones para suma/resta/multiplicacion (siempre válidas para matrices cuadradas del mismo tamaño)
+// Función para validar dimensiones para suma/resta/multiplicacion (siempre válidas para matrices cuadradas del mismo tamaño)
 function validateSameDimensions(sizeA, sizeB) {
     return sizeA === sizeB
 }
 
-// Función helper para obtener valor escalar
+// Función para obtener valor escalar
 function getScalarValue() {
     const scalarInput = $('#scalar-input')
     const value = parseFloat(scalarInput.value)
@@ -140,7 +141,7 @@ function getScalarValue() {
     return value
 }
 
-// Función helper para obtener tamaño de matriz identidad
+// Función para obtener tamaño de matriz identidad
 function getIdentitySize() {
     const identityInput = $('#identity-size')
     const size = parseInt(identityInput.value)
@@ -179,6 +180,128 @@ function determinant(matrix) {
     return det
 }
 
+// Función para multiplicar matrices
+function multiplyMatrices(matrixA, matrixB) {
+    if (matrixA[0].length !== matrixB.length) {
+        showError('Las matrices no se pueden multiplicar: las columnas de A deben coincidir con las filas de B')
+        return null
+    }
+
+    const resultMatrix = Array.from({ length: matrixA.length }, () => Array(matrixB[0].length).fill(0))
+    for (let i = 0; i < matrixA.length; i++) {
+        for (let j = 0; j < matrixB[0].length; j++) {
+            for (let k = 0; k < matrixA[0].length; k++) {
+                resultMatrix[i][j] += matrixA[i][k] * matrixB[k][j]
+            }
+        }
+    }
+    return resultMatrix
+}
+
+// Función para calcular la adjunta de una matriz cuadrada
+function adjugate(matrix) {
+    const n = matrix.length
+    const adj = Array.from({ length: n }, () => Array(n).fill(0))
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            // Construir submatriz eliminando fila i y columna j
+            const subMatrix = []
+            for (let row = 0; row < n; row++) {
+                if (row === i) continue
+                const subRow = []
+                for (let col = 0; col < n; col++) {
+                    if (col === j) continue
+                    subRow.push(matrix[row][col])
+                }
+                subMatrix.push(subRow)
+            }
+            adj[j][i] = ((i + j) % 2 === 0) ? 1 : -1 * determinant(subMatrix)
+        }
+    }
+    return adj
+}
+
+// Funcion para calcular la traspuesta de una matriz cuadrada
+function transpose(matrix) {
+    return matrix.map((row, i) => row.map((val, j) => val = matrix[j][i]))
+}
+
+// Función para calcular inversa
+function inverseMatrix(matrix) {
+    const n = matrix.length
+    const det = determinant(matrix)
+    
+    // Si el determinante es 0, la matriz no es invertible
+    if (Math.abs(det) < 0.0001) {
+        return null
+    }
+    
+    let adjugate = []
+    for (let x = 0; x < n; x++) {
+        adjugate[x] = []
+    }
+    
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            // Hacer matriz pequeña sin fila i y columna j
+            let subMatrix = []
+            for (let x = 0; x < n; x++) {
+                if (x !== i) {
+                    let row = []
+                    for (let y = 0; y < n; y++) {
+                        if (y !== j) {
+                            row.push(matrix[x][y])
+                        }
+                    }
+                    subMatrix.push(row)
+                }
+            }
+            
+            // Calcular cofactor
+            let cofactor = determinant(subMatrix)
+            if ((i + j) % 2 === 1) {
+                cofactor = -cofactor
+            }
+            
+            // Poner en posición traspuesta
+            adjugate[j][i] = cofactor
+        }
+    }
+    
+    // Dividir por determinante
+    let inverse = []
+    for (let i = 0; i < n; i++) {
+        inverse[i] = []
+        for (let j = 0; j < n; j++) {
+            inverse[i][j] = Number((adjugate[i][j] / det).toFixed(4))
+        }
+    }
+    
+    return inverse
+}
+
+// Función simple para verificar identidad
+function isIdentity(matrix) {
+    const n = matrix.length
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if (i === j) {
+                // Debe ser 1 en la diagonal
+                if (Math.abs(matrix[i][j] - 1) > 0.01) {
+                    return false
+                }
+            } else {
+                // Debe ser 0 fuera de la diagonal
+                if (Math.abs(matrix[i][j]) > 0.01) {
+                    return false
+                }
+            }
+        }
+    }
+    return true
+}
+
 // Event listeners para botones de operación
 function setupOperationButtons() {
     operationButtons.forEach(button => {
@@ -196,7 +319,7 @@ function setupOperationButtons() {
                 case 'add':
                     if (!validateSameDimensions(sizeA, sizeB)) {
                         showError('Las matrices A y B deben tener el mismo tamaño para la suma')
-                        return
+                        break
                     }
                     const resultMatrixAdd = matrixA.map((row, i) => row.map((val, j) => val + matrixB[i][j]))
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixAdd)}</pre>`
@@ -204,7 +327,7 @@ function setupOperationButtons() {
                 case 'subtract-ab':
                     if (!validateSameDimensions(sizeA, sizeB)) {
                         showError('Las matrices A y B deben tener el mismo tamaño para la resta')
-                        return
+                        break
                     }
                     const resultMatrixSubstractAB = matrixA.map((row, i) => row.map((val, j) => val - matrixB[i][j]))
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractAB)}</pre>`
@@ -212,84 +335,98 @@ function setupOperationButtons() {
                 case 'subtract-ba':
                     if (!validateSameDimensions(sizeA, sizeB)) {
                         showError('Las matrices A y B deben tener el mismo tamaño para la resta')
-                        return
+                        break
                     }
                     const resultMatrixSubstractBA = matrixB.map((row, i) => row.map((val, j) => val - matrixA[i][j]))
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractBA)}</pre>`
                     break
                 case 'multiply-ab':
-                    if (!validateSameDimensions(sizeA, sizeB)) {
-                        showError('Las matrices A y B al ser cuadradas deben tener el mismo tamaño para la multiplicación')
-                        return
-                    }
-                    const resultMatrixMultiplyAB = Array.from({ length: sizeA }, () => Array(sizeB).fill(0))
-                    for (let i = 0; i < sizeA; i++) {
-                        for (let j = 0; j < sizeB; j++) {
-                            for (let k = 0; k < sizeA; k++) {
-                                resultMatrixMultiplyAB[i][j] += matrixA[i][k] * matrixB[k][j]
-                            }
-                        }
-                    }
+                    const resultMatrixMultiplyAB = multiplyMatrices(matrixA, matrixB)
+                    if (resultMatrixMultiplyAB === null) break
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyAB)}</pre>`
                     break
                 case 'multiply-ba':
-                    const resultMatrixMultiplyBA = Array.from({ length: sizeB }, () => Array(sizeA).fill(0))
-                    for (let i = 0; i < sizeB; i++) {
-                        for (let j = 0; j < sizeA; j++) {
-                            for (let k = 0; k < sizeB; k++) {
-                                resultMatrixMultiplyBA[i][j] += matrixB[i][k] * matrixA[k][j]
-                            }
-                        }
-                    }
+                    const resultMatrixMultiplyBA = multiplyMatrices(matrixB, matrixA)
+                    if (resultMatrixMultiplyBA === null) break
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyBA)}</pre>`
                     break
                 case 'scalar-a':
-                    const scalarA = parseFloat(scalarInput.value)
-                    if (isNaN(scalarA)) {
-                        showError('El valor del escalar no es válido')
-                        return
-                    }
+                    const scalarA = getScalarValue()
                     const resultMatrixScalarA = matrixA.map(row => row.map(val => val * scalarA))
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarA)}</pre>`
                     break
                 case 'scalar-b':
-                    const scalarB = parseFloat(scalarInput.value)
-                    if (isNaN(scalarB)) {
-                        showError('El valor del escalar no es válido')
-                        return
-                    }
+                    const scalarB = getScalarValue()
                     const resultMatrixScalarB = matrixB.map(row => row.map(val => val * scalarB))
                     resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarB)}</pre>`
                     break
                 case 'transpose-a':
-                    const matrixATranspose = matrixA.map((row, i) => row.map((val, j) => val = matrixA[j][i]))
+                    const matrixATranspose = transpose(matrixA)
                     resultDisplay.innerHTML = `<pre>${formatMatrix(matrixATranspose)}</pre>`
                     break
                 case 'transpose-b':
-                    const matrixBTranspose = matrixB.map((row, i) => row.map((val, j) => val = matrixB[j][i]))
+                    const matrixBTranspose = transpose(matrixB)
                     resultDisplay.innerHTML = `<pre>${formatMatrix(matrixBTranspose)}</pre>`
                     break
                 case 'determinant-a':
-                    // Hallar el determinante de matriz A
                     const detA = determinant(matrixA)
                     displayScalar(detA, 'det(A)')
                     break
                 case 'determinant-b':
-                    // Hallar el determinante de matriz B
                     const detB = determinant(matrixB)
                     displayScalar(detB, 'det(B)')
                     break
                 case 'inverse-a':
-                    // Hallar la inversa de matriz A
+                    const invA = inverseMatrix(matrixA)
+                    if (invA === null) {
+                        showError('La matriz A no se puede invertir (determinante = 0)')
+                        break
+                    }
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(invA)}</pre>`
                     break
                 case 'inverse-b':
-                    // Hallar la inversa de matriz B
+                    const invB = inverseMatrix(matrixB)
+                    if (invB === null) {
+                        showError('La matriz B no es invertible')
+                        break
+                    }
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(invB)}</pre>`
                     break
                 case 'verify-inverse-a':
-                    // Implementar verificación A × A⁻¹ = I
+                    const invA2 = inverseMatrix(matrixA)
+                    if (invA2 === null) {
+                        showError('La matriz A no es invertible')
+                        break
+                    }
+                    const productAInvA = multiplyMatrices(matrixA, invA2).map(row => row.map(val => parseFloat(val.toFixed(4))))
+                    if (isIdentity(productAInvA)) {
+                        showSuccess('¡La multiplicación A × A⁻¹ da la matriz identidad!')
+                    } else {
+                        showError('La multiplicación A × A⁻¹ NO da la matriz identidad')
+                    }
+                    resultDisplay.innerHTML += `<pre>${formatMatrix(productAInvA)}</pre>`
+                    break
+                case 'verify-inverse-b':
+                    const invB2 = inverseMatrix(matrixB)
+                    if (invB2 === null) {
+                        showError('La matriz B no es invertible')
+                        break
+                    }
+                    const productBInvB = multiplyMatrices(matrixB, invB2).map(row => row.map(val => parseFloat(val.toFixed(4))))
+                    if (isIdentity(productBInvB)) {
+                        showSuccess('¡La multiplicación B × B⁻¹ da la matriz identidad!')
+                    } else {
+                        showError('La multiplicación B × B⁻¹ NO da la matriz identidad')
+                    }
+                    resultDisplay.innerHTML += `<pre>${formatMatrix(productBInvB)}</pre>`
                     break
                 case 'identity':
-                    // Implementar generación de matriz identidad
+                    const identitySize = getIdentitySize()
+                    const identityMatrix = Array.from({ length: identitySize }, () => Array(identitySize).fill(0))
+                    for (let i = 0; i < identitySize; i++) {
+                        identityMatrix[i][i] = 1
+                    }
+                    resultDisplay.innerHTML = `<pre>${formatMatrix(identityMatrix)}</pre>`
                     break
                 case 'random-fill':
                     for (let i = 0; i < sizeA; i++) {
@@ -320,7 +457,6 @@ clearResultBtn.addEventListener('click', () => {
     resultDisplay.innerHTML = '<div class="result-placeholder">Selecciona una operación para ver el resultado aquí</div>'
 })
 
-// Inicializar la aplicación
 document.addEventListener('DOMContentLoaded', () => {
     initializeMatrices()
     setupSizeControls()

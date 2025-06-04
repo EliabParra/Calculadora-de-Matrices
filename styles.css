@@ -362,7 +362,7 @@ body {
     padding: 1rem;
     color: #fca5a5;
     font-size: 0.9rem;
-    margin-top: 1rem;
+    margin: 1rem 3rem 0 3rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -375,7 +375,7 @@ body {
     padding: 1rem;
     color: #86efac;
     font-size: 0.9rem;
-    margin-top: 1rem;
+    margin: 1rem 3rem 0 3rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
