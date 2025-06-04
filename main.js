@@ -61,7 +61,7 @@ function setupSizeControls() {
     })
 }
 
-// Función helper para obtener valores de matriz cuadrada
+// Función para obtener valores de matriz cuadrada
 function getMatrixValues(prefix, size) {
     const matrix = []
     for (let i = 0; i < size; i++) {
@@ -74,7 +74,7 @@ function getMatrixValues(prefix, size) {
     return matrix
 }
 
-// Función helper para mostrar mensajes de error
+// Función para mostrar mensajes de error
 function showError(message) {
     resultDisplay.innerHTML = `
         <div class="error-message">
@@ -84,7 +84,7 @@ function showError(message) {
     `
 }
 
-// Función helper para mostrar mensajes de éxito
+// Función para mostrar mensajes de éxito
 function showSuccess(message) {
     resultDisplay.innerHTML = `
         <div class="success-message">
@@ -94,7 +94,7 @@ function showSuccess(message) {
     `
 }
 
-// Función para mostrar matriz en formato bonito
+// Función para mostrar matriz formateada
 function formatMatrix(matrix) {
     if (!Array.isArray(matrix) || matrix.length === 0) return ''
     
@@ -150,7 +150,7 @@ function getIdentitySize() {
     return size
 }
 
-// Funcion para calcular el determinante de una matriz cuadrada usando eliminación de Gauss
+// Funcion para calcular el determinante de una matriz cuadrada usando cofactores
 function determinant(matrix) {
     const n = matrix.length
 
