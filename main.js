@@ -7,8 +7,6 @@ const resultDisplay = $('#result-display')
 
 const sizeAInput = $('#size-a')
 const sizeBInput = $('#size-b')
-const scalarInput = $('#scalar-input')
-const identitySizeInput = $('#identity-size')
 
 const operationButtons = $$('.operation-btn')
 const clearResultBtn = $('#clear-result-btn')
