@@ -31,7 +31,8 @@ Esta aplicación web te permite realizar operaciones matemáticas con matrices c
   - B - A
 
 - **Multiplicación:**  
-  - A × B  
+  - A × B
+  - B × A
   - Multiplicación por escalar: k × A, k × B (ingresa el valor de k en el campo correspondiente)
 
 - **Transposición:**  
@@ -46,6 +47,7 @@ Esta aplicación web te permite realizar operaciones matemáticas con matrices c
   - Calcular inversa de A  
   - Calcular inversa de B  
   - Verificar que A × A⁻¹ = Identidad
+  - Verificar que B × B⁻¹ = Identidad
 
 - **Matriz Identidad:**  
   - Generar matriz identidad de tamaño n (elige el tamaño y presiona el botón correspondiente)
