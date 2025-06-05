@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fahkwang:wght@700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -30,6 +32,7 @@ body {
 .header h1 {
     font-size: 3rem;
     font-weight: 800;
+    font-family: 'Fahkwang', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
