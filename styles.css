@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Fahkwang:wght@700&display=swap');
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -178,11 +182,37 @@ body {
     border-radius: 20px;
     padding: 2rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, auto);
+    gap: 1rem;
     grid-column: span 2 / span 2;
 }
+
+.g1 {
+    grid-column: span 2 / span 2;
+}
+.g2 {
+    grid-row-start: 2;
+}
+.g3 {
+    grid-column-start: 1;
+    grid-row-start: 3;
+}
+.g4 {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+.g5 {
+    grid-row-start: 3;
+}
+.g7 {
+    grid-row-start: 4;
+}
+.g8 {
+    grid-column: span 2 / span 2;
+}
+
 
 .operations-title {
     text-align: center;
@@ -195,6 +225,13 @@ body {
 .operation-group {
     display: flex;
     flex-direction: column;
+    gap: 0.8rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.operation-buttons {
+    display: flex;
     gap: 0.8rem;
 }
 

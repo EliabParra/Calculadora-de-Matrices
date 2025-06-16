@@ -51,94 +51,93 @@
 
             <!-- Panel de Operaciones -->
             <section class="operations-panel">
-                <h2 class="operations-title">Operaciones</h2>
+                <h2 class="operations-title g1">Operaciones</h2>
                 
-                <div class="operation-group">
+                <div class="operation-group g2">
                     <div class="operation-group-title">Suma y Resta</div>
-                    <button class="operation-btn" id="add-btn" data-operation="add">
-                        <i class="fas fa-plus"></i>
-                        A + B
-                    </button>
-                    <button class="operation-btn" id="subtract-ab-btn" data-operation="subtract-ab">
-                        <i class="fas fa-minus"></i>
-                        A - B
-                    </button>
-                    <button class="operation-btn" id="subtract-ba-btn" data-operation="subtract-ba">
-                        <i class="fas fa-exchange-alt"></i>
-                        B - A
-                    </button>
+                    <div class="operation-buttons">
+                        <button class="operation-btn" id="add-btn" data-operation="add">
+                            A + B
+                        </button>
+                        <button class="operation-btn" id="subtract-ab-btn" data-operation="subtract-ab">
+                            A - B
+                        </button>
+                        <button class="operation-btn" id="subtract-ba-btn" data-operation="subtract-ba">
+                            B - A
+                        </button>
+                    </div>
                 </div>
 
-                <div class="operation-group">
+                <div class="operation-group g3">
                     <div class="operation-group-title">Multiplicación</div>
-                    <button class="operation-btn" id="multiply-ab-btn" data-operation="multiply-ab">
-                        <i class="fas fa-times"></i>
-                        A × B
-                    </button>
-                    <button class="operation-btn" id="multiply-ba-btn" data-operation="multiply-ba">
-                        <i class="fas fa-times"></i>
-                        B × A
-                    </button>
-                    <div class="scalar-group">
-                        <input type="number" id="scalar-input" class="scalar-input" placeholder="k" step="1">
-                        <button class="operation-btn scalar-btn" id="scalar-a-btn" data-operation="scalar-a">
-                            <i class="fas fa-asterisk"></i>
-                            k × A
+                    <div class="operation-buttons">
+                        <button class="operation-btn" id="multiply-ab-btn" data-operation="multiply-ab">
+                            A × B
+                        </button>
+                        <button class="operation-btn" id="multiply-ba-btn" data-operation="multiply-ba">
+                            B × A
                         </button>
                     </div>
-                    <div class="scalar-group">
-                        <button class="operation-btn scalar-btn" id="scalar-b-btn" data-operation="scalar-b">
-                            <i class="fas fa-asterisk"></i>
-                            k × B
-                        </button>
+                    <div class="operation-buttons">
+                        <div class="scalar-group">
+                            <input type="number" id="scalar-input" class="scalar-input" placeholder="k" step="1">
+                            <button class="operation-btn scalar-btn" id="scalar-a-btn" data-operation="scalar-a">
+                                k × A
+                            </button>
+                        </div>
+                        <div class="scalar-group">
+                            <button class="operation-btn scalar-btn" id="scalar-b-btn" data-operation="scalar-b">
+                                k × B
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="operation-group">
+                <div class="operation-group g4">
                     <div class="operation-group-title">Transposición</div>
-                    <button class="operation-btn secondary" id="transpose-a-btn" data-operation="transpose-a">
-                        <i class="fas fa-exchange-alt"></i>
-                        A<sup>T</sup>
-                    </button>
-                    <button class="operation-btn secondary" id="transpose-b-btn" data-operation="transpose-b">
-                        <i class="fas fa-exchange-alt"></i>
-                        B<sup>T</sup>
-                    </button>
+                    <div class="operation-buttons">
+                        <button class="operation-btn secondary" id="transpose-a-btn" data-operation="transpose-a">
+                            A<sup>T</sup>
+                        </button>
+                        <button class="operation-btn secondary" id="transpose-b-btn" data-operation="transpose-b">
+                            B<sup>T</sup>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="operation-group">
+                <div class="operation-group g5">
                     <div class="operation-group-title">Determinante</div>
-                    <button class="operation-btn secondary" id="determinant-a-btn" data-operation="determinant-a">
-                        <i class="fas fa-calculator"></i>
-                        det (A)
-                    </button>
-                    <button class="operation-btn secondary" id="determinant-b-btn" data-operation="determinant-b">
-                        <i class="fas fa-calculator"></i>
-                        det (B)
-                    </button>
+                    <div class="operation-buttons">
+                        <button class="operation-btn secondary" id="determinant-a-btn" data-operation="determinant-a">
+                            det (A)
+                        </button>
+                        <button class="operation-btn secondary" id="determinant-b-btn" data-operation="determinant-b">
+                            det (B)
+                        </button>
+                    </div>
                 </div>
 
-                <div class="operation-group">
+                <div class="operation-group g6">
                     <div class="operation-group-title">Matriz Inversa</div>
-                    <button class="operation-btn secondary" id="inverse-a-btn" data-operation="inverse-a">
-                        <i class="fas fa-undo"></i>
-                        A⁻¹
-                    </button>
-                    <button class="operation-btn secondary" id="inverse-b-btn" data-operation="inverse-b">
-                        <i class="fas fa-undo"></i>
-                        B⁻¹
-                    </button>
-                    <button class="operation-btn secondary" id="verify-inverse-a-btn" data-operation="verify-inverse-a">
-                        <i class="fas fa-check-circle"></i>
-                        Verificar A × A⁻¹
-                    </button>
-                    <button class="operation-btn secondary" id="verify-inverse-b-btn" data-operation="verify-inverse-b">
-                        <i class="fas fa-check-circle"></i>
-                        Verificar B × B⁻¹
-                    </button>
+                    <div class="operation-buttons">
+                        <button class="operation-btn secondary" id="inverse-a-btn" data-operation="inverse-a">
+                            A⁻¹
+                        </button>
+                        <button class="operation-btn secondary" id="inverse-b-btn" data-operation="inverse-b">
+                            B⁻¹
+                        </button>
+                    </div>
+                    <div class="operation-buttons">
+                        <button class="operation-btn secondary" id="verify-inverse-a-btn" data-operation="verify-inverse-a">
+                            A × A⁻¹ = I
+                        </button>
+                        <button class="operation-btn secondary" id="verify-inverse-b-btn" data-operation="verify-inverse-b">
+                            B × B⁻¹ = I
+                        </button>
+                    </div>
                 </div>
 
-                <div class="operation-group">
+                <div class="operation-group g7">
                     <div class="operation-group-title">Matriz Identidad</div>
                     <div class="identity-group">
                         <input type="number" id="identity-size" class="scalar-input" placeholder="n" min="2" max="10" value="3">
@@ -149,16 +148,18 @@
                     </div>
                 </div>
 
-                <div class="operation-group">
+                <div class="operation-group g8">
                     <div class="operation-group-title">Utilidades</div>
-                    <button class="operation-btn tertiary" id="random-fill-btn" data-operation="random-fill">
-                        <i class="fas fa-random"></i>
-                        Llenar Random
-                    </button>
-                    <button class="operation-btn tertiary" id="clear-matrices-btn" data-operation="clear-matrices">
-                        <i class="fas fa-eraser"></i>
-                        Limpiar Todo
-                    </button>
+                    <div class="operation-buttons">
+                        <button class="operation-btn tertiary" id="random-fill-btn" data-operation="random-fill">
+                            <i class="fas fa-random"></i>
+                            Llenar Random
+                        </button>
+                        <button class="operation-btn tertiary" id="clear-matrices-btn" data-operation="clear-matrices">
+                            <i class="fas fa-eraser"></i>
+                            Limpiar Todo
+                        </button>
+                    </div>
                 </div>
             </section>
         </main>
