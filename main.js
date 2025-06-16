@@ -516,7 +516,7 @@ function setupOperationButtons() {
             }
         }
         showSuccess('Matrices A y B llenadas con valores aleatorios entre -10 y 10')
-        $('.header').scrollIntoView()
+        $('.main-content').scrollIntoView()
     })
 
     identity.addEventListener('click', () => {
