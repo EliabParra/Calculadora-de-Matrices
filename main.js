@@ -1,15 +1,20 @@
 const $ = $ => {return document.querySelector($)}
 const $$ = $$ => {return document.querySelectorAll($$)}
 
+// Inicializar aplicación
+document.addEventListener('DOMContentLoaded', () => {
+    initializeMatrices()
+    setupSizeControls()
+    setupOperationButtons()
+})
+
+// Elementos del DOM
 const matrixAGrid = $('#matrix-a-grid')
 const matrixBGrid = $('#matrix-b-grid')
 const resultDisplay = $('#result-display')
-
 const sizeAInput = $('#size-a')
 const sizeBInput = $('#size-b')
 
-const operationButtons = $$('.operation-btn')
-const clearResultBtn = $('#clear-result-btn')
 
 // Función para crear la estructura de las matrices (siempre cuadradas)
 function createMatrixGrid(gridElement, size, prefix) {
@@ -72,6 +77,20 @@ function getMatrixValues(prefix, size) {
         }
     }
     return matrix
+}
+
+// Funciones para obtener siempre los valores actuales
+function getCurrentSizeA() {
+    return parseInt(sizeAInput.value)
+}
+function getCurrentSizeB() {
+    return parseInt(sizeBInput.value)
+}
+function getCurrentMatrixA() {
+    return getMatrixValues('matrix-a', getCurrentSizeA())
+}
+function getCurrentMatrixB() {
+    return getMatrixValues('matrix-b', getCurrentSizeB())
 }
 
 // Función para mostrar mensajes de error
@@ -300,163 +319,222 @@ function isIdentity(matrix) {
     return true
 }
 
-// Event listeners para botones de operación
-function setupOperationButtons() {
-    operationButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const operation = button.dataset.operation
-            console.log(`Operación seleccionada: ${operation}`)
-            
-            const sizeA = parseInt(sizeAInput.value)
-            const sizeB = parseInt(sizeBInput.value)
+function setupOperationButtons() {    
+    const add = $('#add-btn')
+    const subtractAB = $('#subtract-ab-btn')
+    const subtractBA = $('#subtract-ba-btn')
+    const multiplyAB = $('#multiply-ab-btn')
+    const multiplyBA = $('#multiply-ba-btn')
+    const scalarA = $('#scalar-a-btn')
+    const scalarB = $('#scalar-b-btn')
+    const transposeA = $('#transpose-a-btn')
+    const transposeB = $('#transpose-b-btn')
+    const determinantA = $('#determinant-a-btn')
+    const determinantB = $('#determinant-b-btn')
+    const inverseA = $('#inverse-a-btn')
+    const inverseB = $('#inverse-b-btn')
+    const verifyInverseA = $('#verify-inverse-a-btn')
+    const verifyInverseB = $('#verify-inverse-b-btn')
+    const identity = $('#identity-btn')
+    const randomFill = $('#random-fill-btn')
+    const clearMatrices = $('#clear-matrices-btn')
+    const clearResultBtn = $('#clear-result-btn')
 
-            const matrixA = getMatrixValues('matrix-a', sizeA)
-            const matrixB = getMatrixValues('matrix-b', sizeB)
-            
-            switch(operation) {
-                case 'add':
-                    if (!validateSameDimensions(sizeA, sizeB)) {
-                        showError('Las matrices A y B deben tener el mismo tamaño para la suma')
-                        break
-                    }
-                    const resultMatrixAdd = matrixA.map((row, i) => row.map((val, j) => val + matrixB[i][j]))
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixAdd)}</pre>`
-                    break
-                case 'subtract-ab':
-                    if (!validateSameDimensions(sizeA, sizeB)) {
-                        showError('Las matrices A y B deben tener el mismo tamaño para la resta')
-                        break
-                    }
-                    const resultMatrixSubstractAB = matrixA.map((row, i) => row.map((val, j) => val - matrixB[i][j]))
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractAB)}</pre>`
-                    break
-                case 'subtract-ba':
-                    if (!validateSameDimensions(sizeA, sizeB)) {
-                        showError('Las matrices A y B deben tener el mismo tamaño para la resta')
-                        break
-                    }
-                    const resultMatrixSubstractBA = matrixB.map((row, i) => row.map((val, j) => val - matrixA[i][j]))
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractBA)}</pre>`
-                    break
-                case 'multiply-ab':
-                    const resultMatrixMultiplyAB = multiplyMatrices(matrixA, matrixB)
-                    if (resultMatrixMultiplyAB === null) break
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyAB)}</pre>`
-                    break
-                case 'multiply-ba':
-                    const resultMatrixMultiplyBA = multiplyMatrices(matrixB, matrixA)
-                    if (resultMatrixMultiplyBA === null) break
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyBA)}</pre>`
-                    break
-                case 'scalar-a':
-                    const scalarA = getScalarValue()
-                    const resultMatrixScalarA = matrixA.map(row => row.map(val => val * scalarA))
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarA)}</pre>`
-                    break
-                case 'scalar-b':
-                    const scalarB = getScalarValue()
-                    const resultMatrixScalarB = matrixB.map(row => row.map(val => val * scalarB))
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarB)}</pre>`
-                    break
-                case 'transpose-a':
-                    const matrixATranspose = transpose(matrixA)
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(matrixATranspose)}</pre>`
-                    break
-                case 'transpose-b':
-                    const matrixBTranspose = transpose(matrixB)
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(matrixBTranspose)}</pre>`
-                    break
-                case 'determinant-a':
-                    const detA = determinant(matrixA)
-                    displayScalar(detA, 'det(A)')
-                    break
-                case 'determinant-b':
-                    const detB = determinant(matrixB)
-                    displayScalar(detB, 'det(B)')
-                    break
-                case 'inverse-a':
-                    const invA = inverseMatrix(matrixA)
-                    if (invA === null) {
-                        showError('La matriz A no se puede invertir (determinante = 0)')
-                        break
-                    }
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(invA)}</pre>`
-                    break
-                case 'inverse-b':
-                    const invB = inverseMatrix(matrixB)
-                    if (invB === null) {
-                        showError('La matriz B no es invertible')
-                        break
-                    }
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(invB)}</pre>`
-                    break
-                case 'verify-inverse-a':
-                    const invA2 = inverseMatrix(matrixA)
-                    if (invA2 === null) {
-                        showError('La matriz A no es invertible')
-                        break
-                    }
-                    const productAInvA = multiplyMatrices(matrixA, invA2).map(row => row.map(val => parseFloat(val.toFixed(4))))
-                    if (isIdentity(productAInvA)) {
-                        showSuccess('¡La multiplicación A × A⁻¹ da la matriz identidad!')
-                    } else {
-                        showError('La multiplicación A × A⁻¹ NO da la matriz identidad')
-                    }
-                    resultDisplay.innerHTML += `<pre>${formatMatrix(productAInvA)}</pre>`
-                    break
-                case 'verify-inverse-b':
-                    const invB2 = inverseMatrix(matrixB)
-                    if (invB2 === null) {
-                        showError('La matriz B no es invertible')
-                        break
-                    }
-                    const productBInvB = multiplyMatrices(matrixB, invB2).map(row => row.map(val => parseFloat(val.toFixed(4))))
-                    if (isIdentity(productBInvB)) {
-                        showSuccess('¡La multiplicación B × B⁻¹ da la matriz identidad!')
-                    } else {
-                        showError('La multiplicación B × B⁻¹ NO da la matriz identidad')
-                    }
-                    resultDisplay.innerHTML += `<pre>${formatMatrix(productBInvB)}</pre>`
-                    break
-                case 'identity':
-                    const identitySize = getIdentitySize()
-                    const identityMatrix = Array.from({ length: identitySize }, () => Array(identitySize).fill(0))
-                    for (let i = 0; i < identitySize; i++) {
-                        identityMatrix[i][i] = 1
-                    }
-                    resultDisplay.innerHTML = `<pre>${formatMatrix(identityMatrix)}</pre>`
-                    break
-                case 'random-fill':
-                    for (let i = 0; i < sizeA; i++) {
-                        for (let j = 0; j < sizeA; j++) {
-                            const randomValueA = Math.round(Math.random() * 20 - 10)
-                            $(`#matrix-a-${i}-${j}`).value = randomValueA
-                        }
-                    }
-                    for (let i = 0; i < sizeB; i++) {
-                        for (let j = 0; j < sizeB; j++) {
-                            const randomValueB = Math.round(Math.random() * 20 - 10)
-                            $(`#matrix-b-${i}-${j}`).value = randomValueB
-                        }
-                    }
-                    showSuccess('Matrices A y B llenadas con valores aleatorios entre -10 y 10')
-                    break
-                case 'clear-matrices':
-                    initializeMatrices()
-                    showSuccess('Matrices A y B reinicializadas a 3x3 con valores por defecto')
-                    break
+    add.addEventListener('click', () => {
+        const sizeA = getCurrentSizeA()
+        const sizeB = getCurrentSizeB()
+        const matrixA = getCurrentMatrixA()
+        const matrixB = getCurrentMatrixB()
+        if (!validateSameDimensions(sizeA, sizeB)) {
+            showError('Las matrices A y B deben tener el mismo tamaño para la suma')
+            return
+        }
+        const resultMatrixAdd = matrixA.map((row, i) => row.map((val, j) => val + matrixB[i][j]))
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixAdd)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    subtractAB.addEventListener('click', () => {
+        const sizeA = getCurrentSizeA()
+        const sizeB = getCurrentSizeB()
+        const matrixA = getCurrentMatrixA()
+        const matrixB = getCurrentMatrixB()
+        if (!validateSameDimensions(sizeA, sizeB)) {
+            showError("Las matrices A y B deben tener el mismo tamaño para la resta")
+            return
+        }
+        const resultMatrixSubstractAB = matrixA.map((row, i) => row.map((val, j) => val - matrixB[i][j]))
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractAB)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    subtractBA.addEventListener('click', () => {
+        const sizeA = getCurrentSizeA()
+        const sizeB = getCurrentSizeB()
+        const matrixA = getCurrentMatrixA()
+        const matrixB = getCurrentMatrixB()
+        if (!validateSameDimensions(sizeA, sizeB)) {
+            showError('Las matrices A y B deben tener el mismo tamaño para la resta')
+            return
+        }
+        const resultMatrixSubstractBA = matrixB.map((row, i) => row.map((val, j) => val - matrixA[i][j]))
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixSubstractBA)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    multiplyAB.addEventListener('click', () => {
+        const matrixA = getCurrentMatrixA()
+        const matrixB = getCurrentMatrixB()
+        const resultMatrixMultiplyAB = multiplyMatrices(matrixA, matrixB)
+        if (resultMatrixMultiplyAB === null) return
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyAB)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    multiplyBA.addEventListener('click', () => {
+        const matrixA = getCurrentMatrixA()
+        const matrixB = getCurrentMatrixB()
+        const resultMatrixMultiplyBA = multiplyMatrices(matrixB, matrixA)
+        if (resultMatrixMultiplyBA === null) return
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixMultiplyBA)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    scalarA.addEventListener('click', () => {
+        const scalarA = getScalarValue()
+        const matrixA = getCurrentMatrixA()
+        const resultMatrixScalarA = matrixA.map(row => row.map(val => val * scalarA))
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarA)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    scalarB.addEventListener('click', () => {
+        const scalarB = getScalarValue()
+        const matrixB = getCurrentMatrixB()
+        const resultMatrixScalarB = matrixB.map(row => row.map(val => val * scalarB))
+        resultDisplay.innerHTML = `<pre>${formatMatrix(resultMatrixScalarB)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    transposeA.addEventListener('click', () => {
+        const matrixA = getCurrentMatrixA()
+        const matrixATranspose = transpose(matrixA)
+        resultDisplay.innerHTML = `<pre>${formatMatrix(matrixATranspose)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    transposeB.addEventListener('click', () => {
+        const matrixB = getCurrentMatrixB()
+        const matrixBTranspose = transpose(matrixB)
+        resultDisplay.innerHTML = `<pre>${formatMatrix(matrixBTranspose)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    determinantA.addEventListener('click', () => {
+        const matrixA = getCurrentMatrixA()
+        const detA = determinant(matrixA)
+        displayScalar(detA, 'det(A)')
+        resultDisplay.scrollIntoView()
+    })
+
+    determinantB.addEventListener('click', () => {
+        const matrixB = getCurrentMatrixB()
+        const detB = determinant(matrixB)
+        displayScalar(detB, 'det(B)')
+        resultDisplay.scrollIntoView()
+    })
+
+    inverseA.addEventListener('click', () => {
+        const matrixA = getCurrentMatrixA()
+        const invA = inverseMatrix(matrixA)
+        if (invA === null) {
+            showError('La matriz A no se puede invertir (determinante = 0)')
+            return
+        }
+        resultDisplay.innerHTML = `<pre>${formatMatrix(invA)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    inverseB.addEventListener('click', () => {
+        const matrixB = getCurrentMatrixB()
+        const invB = inverseMatrix(matrixB)
+        if (invB === null) {
+            showError('La matriz B no es invertible')
+            return
+        }
+        resultDisplay.innerHTML = `<pre>${formatMatrix(invB)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    verifyInverseA.addEventListener('click', () => {
+        const matrixA = getCurrentMatrixA()
+        const invA2 = inverseMatrix(matrixA)
+        if (invA2 === null) {
+            showError('La matriz A no es invertible')
+            return
+        }
+        const productAInvA = multiplyMatrices(matrixA, invA2).map(row => row.map(val => parseFloat(val.toFixed(4))))
+        if (isIdentity(productAInvA)) {
+            showSuccess('¡La multiplicación A × A⁻¹ da la matriz identidad!')
+        } else {
+            showError('La multiplicación A × A⁻¹ NO da la matriz identidad')
+        }
+        resultDisplay.innerHTML += `<pre>${formatMatrix(productAInvA)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    verifyInverseB.addEventListener('click', () => {
+        const matrixB = getCurrentMatrixB()
+        const invB2 = inverseMatrix(matrixB)
+        if (invB2 === null) {
+            showError('La matriz B no es invertible')
+            return
+        }
+        const productBInvB = multiplyMatrices(matrixB, invB2).map(row => row.map(val => parseFloat(val.toFixed(4))))
+        if (isIdentity(productBInvB)) {
+            showSuccess('¡La multiplicación B × B⁻¹ da la matriz identidad!')
+        } else {
+            showError('La multiplicación B × B⁻¹ NO da la matriz identidad')
+        }
+        resultDisplay.innerHTML += `<pre>${formatMatrix(productBInvB)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    randomFill.addEventListener('click', () => {
+        const sizeA = getCurrentSizeA()
+        const sizeB = getCurrentSizeB()
+        for (let i = 0; i < sizeA; i++) {
+            for (let j = 0; j < sizeA; j++) {
+                const randomValueA = Math.round(Math.random() * 20 - 10)
+                $(`#matrix-a-${i}-${j}`).value = randomValueA
             }
-        })
+        }
+        for (let i = 0; i < sizeB; i++) {
+            for (let j = 0; j < sizeB; j++) {
+                const randomValueB = Math.round(Math.random() * 20 - 10)
+                $(`#matrix-b-${i}-${j}`).value = randomValueB
+            }
+        }
+        showSuccess('Matrices A y B llenadas con valores aleatorios entre -10 y 10')
+        $('.header').scrollIntoView()
+    })
+
+    identity.addEventListener('click', () => {
+        const identitySize = getIdentitySize()
+        const identityMatrix = Array.from({ length: identitySize }, () => Array(identitySize).fill(0))
+        for (let i = 0; i < identitySize; i++) {
+            identityMatrix[i][i] = 1
+        }
+        resultDisplay.innerHTML = `<pre>${formatMatrix(identityMatrix)}</pre>`
+        resultDisplay.scrollIntoView()
+    })
+
+    clearMatrices.addEventListener('click', () => {
+        initializeMatrices()
+        showSuccess('Matrices A y B reinicializadas a 3x3 con valores por defecto')
+    })
+
+    clearResultBtn.addEventListener('click', () => {
+        resultDisplay.innerHTML = '<div class="result-placeholder">Selecciona una operación para ver el resultado aquí</div>'
     })
 }
-
-// Limpiar resultado
-clearResultBtn.addEventListener('click', () => {
-    resultDisplay.innerHTML = '<div class="result-placeholder">Selecciona una operación para ver el resultado aquí</div>'
-})
-
-document.addEventListener('DOMContentLoaded', () => {
-    initializeMatrices()
-    setupSizeControls()
-    setupOperationButtons()
-})
